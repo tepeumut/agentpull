@@ -13,6 +13,14 @@
     "cli"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tepeumut/agentpull.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tepeumut/agentpull/issues"
+  },
+  "homepage": "https://github.com/tepeumut/agentpull#readme",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"

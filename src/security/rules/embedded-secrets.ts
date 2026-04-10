@@ -9,7 +9,7 @@ const PATTERNS = [
   { re: /sk-[A-Za-z0-9]{48}/, desc: 'OpenAI API key' },
   { re: /sk-ant-api[A-Za-z0-9\-_]{50,}/, desc: 'Anthropic API key' },
   { re: /eyJ[A-Za-z0-9\-_]{20,}\.[A-Za-z0-9\-_]{20,}\.[A-Za-z0-9\-_]{20,}/, desc: 'JWT token' },
-  { re: /xox[baprs]-[A-Za-z0-9\-]{10,}/, desc: 'Slack token' },
+  { re: /xox[baprs]-[A-Za-z0-9-]{10,}/, desc: 'Slack token' },
 ]
 
 export const embeddedSecretsRule: ScanRule = {

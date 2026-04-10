@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import { hashFile } from '../utils/hash.js'
-import type { InstalledEntry, InstalledFile } from '../types/common.js'
+import type { InstalledFile } from '../types/common.js'
 
 export interface IntegrityResult {
   ok: boolean

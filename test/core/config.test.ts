@@ -1,15 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { mkdtemp, rm, writeFile, readFile, mkdir } from 'node:fs/promises'
+import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 // We need to mock the config paths to use temp dirs
 let testDir: string
-let configPath: string
 
 beforeEach(async () => {
   testDir = await mkdtemp(join(tmpdir(), 'agentpull-config-test-'))
-  configPath = join(testDir, 'config.json')
 })
 
 afterEach(async () => {

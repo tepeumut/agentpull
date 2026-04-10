@@ -56,9 +56,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
-        # Lint failures shouldn't block a cross-OS test run on legacy node;
-        # treat lint as informational on the older matrix cells.
-        continue-on-error: ${{ matrix.node != 22 }}
 
       - name: Test
         run: npm test

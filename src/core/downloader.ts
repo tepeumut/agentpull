@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { createWriteStream } from 'node:fs'
-import { chmod, mkdir, rm, mkdtemp, readdir, rename, stat, writeFile } from 'node:fs/promises'
+import { chmod, rm, mkdtemp, readdir, rename, stat, writeFile } from 'node:fs/promises'
 import { devNull, tmpdir, homedir, platform } from 'node:os'
 import { randomBytes } from 'node:crypto'
 import { join, relative } from 'node:path'

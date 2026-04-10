@@ -33,7 +33,7 @@ Supports **GitHub**, **GitLab** (cloud + self-hosted), **Bitbucket Cloud**, **Az
 npm install -g agentpull
 ```
 
-Requires Node.js 18 or newer (uses native `fetch` and `crypto`). The generic `git` provider additionally needs a `git` binary on `PATH` — every other provider works without one.
+Requires Node.js 20 or newer (uses native `fetch` and `crypto`). The generic `git` provider additionally needs a `git` binary on `PATH` — every other provider works without one.
 
 ## Quick start
 
@@ -596,7 +596,7 @@ To cut a release:
 The workflow:
 
 - **Verifies** the pushed tag matches `package.json`'s `version` (mismatch → fails fast with a recovery hint).
-- **Re-runs the full test matrix** (Ubuntu/macOS/Windows × Node 18/20/22, 9 cells) via `workflow_call` reuse of `test.yml`.
+- **Re-runs the full test matrix** (Ubuntu/macOS/Windows × Node 20/22, 6 cells) via `workflow_call` reuse of `test.yml`.
 - **Publishes to npm** with provenance via [Trusted Publisher](https://docs.npmjs.com/trusted-publishers) (OIDC, no `NPM_TOKEN` secret).
 - **Creates a GitHub Release** for the same tag with auto-generated notes (PRs since the previous tag) and the built `agentpull-X.Y.Z.tgz` attached as a downloadable artifact.
 

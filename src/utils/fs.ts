@@ -9,7 +9,7 @@ import {
   rename,
   chmod,
 } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
+import { dirname, join, relative, isAbsolute } from 'node:path'
 import { randomBytes } from 'node:crypto'
 
 export interface WriteJsonOptions {
@@ -76,7 +76,11 @@ export async function isEmptyDir(dirPath: string): Promise<boolean> {
 }
 
 export async function removeEmptyDirs(dirPath: string, stopAt: string): Promise<void> {
-  if (dirPath === stopAt || !dirPath.startsWith(stopAt + '/')) return
+  // Use path.relative so containment is separator-agnostic (works on Windows).
+  // Bail if dirPath === stopAt (rel === ''), escapes stopAt (starts with '..'),
+  // or sits on a different volume on Windows (rel is absolute).
+  const rel = relative(stopAt, dirPath)
+  if (rel === '' || rel.startsWith('..') || isAbsolute(rel)) return
   if (await isEmptyDir(dirPath)) {
     await rm(dirPath, { recursive: true, force: true })
     await removeEmptyDirs(dirname(dirPath), stopAt)

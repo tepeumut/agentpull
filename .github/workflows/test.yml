@@ -1,0 +1,73 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Allow other workflows (publish.yml) to reuse the matrix as a gate.
+  workflow_call:
+
+# Cancel in-progress runs on the same ref when a new commit lands. The
+# `github.workflow` term keeps tag-push runs (publish.yml) in their own
+# concurrency group, so a publish gate doesn't cancel a main-branch run of
+# the same SHA, and vice versa.
+concurrency:
+  group: test-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Always run every matrix cell — surfacing all OS failures at once
+      # is more useful than fail-fast for a cross-platform CLI.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [18, 20, 22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install libsecret + dbus (Linux only)
+        # The ubuntu runner doesn't ship `secret-tool` and has no D-Bus session
+        # by default — `src/security/keychain.ts` shells out to both for the
+        # Linux keychain path. Without these the keychain code path is dead
+        # weight on this runner.
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsecret-tools dbus-x11 gnome-keyring
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+        # Lint failures shouldn't block a cross-OS test run on legacy node;
+        # treat lint as informational on the older matrix cells.
+        continue-on-error: ${{ matrix.node != 22 }}
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Smoke — bundled binary runs
+        run: |
+          node dist/bin/agentpull.js --version
+          node dist/bin/agentpull.js --help
+        shell: bash

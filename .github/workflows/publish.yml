@@ -57,8 +57,14 @@ jobs:
       # Node 22 ships with npm 10.x, which silently publishes unauthenticated
       # and fails with a 404 on first publish. Upgrade before `npm ci` so the
       # lockfile install also runs on the new npm.
+      #
+      # The `|| npm install -g npm@...` retry works around a known self-upgrade
+      # bug where the bundled npm drops `promise-retry` mid-reify and crashes;
+      # a second run completes the upgrade cleanly.
       - name: Upgrade npm for OIDC Trusted Publishing
-        run: npm install -g npm@latest
+        run: |
+          npm install -g npm@11.5.1 || npm install -g npm@11.5.1
+          npm --version
 
       - name: Install dependencies
         run: npm ci

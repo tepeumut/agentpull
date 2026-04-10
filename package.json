@@ -1,6 +1,6 @@
 {
   "name": "agentpull",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Pull AI agent configurations (Cursor, Copilot, Claude, Windsurf, Antigravity, Aider) from any git host — tracked, verified, updatable",
   "keywords": [
     "ai",
